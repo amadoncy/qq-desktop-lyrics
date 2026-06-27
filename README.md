@@ -22,7 +22,7 @@ Windows 桌面悬浮歌词程序。UI 视觉风格借鉴 [Sonic Topography](http
 
 ## 下载使用（exe）
 
-在 [Releases](https://github.com/YOUR_USERNAME/qq-desktop-lyrics/releases) 页面下载：
+在 [Releases](https://github.com/amadoncy/qq-desktop-lyrics/releases) 页面下载：
 
 | 文件 | 说明 |
 |------|------|

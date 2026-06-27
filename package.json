@@ -1,0 +1,95 @@
+{
+  "name": "qq-desktop-lyrics",
+  "version": "0.1.0",
+  "description": "Windows desktop lyrics overlay with QQ Music SMTC sync and Sonic Topography-inspired UI",
+  "author": "",
+  "license": "MIT",
+  "main": "dist-electron/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.app.json && vite build && tsc -p tsconfig.electron.json",
+    "preview": "vite preview",
+    "electron:compile": "tsc -p tsconfig.electron.json && node scripts/build-preload.cjs",
+    "electron:watch": "concurrently \"tsc -p tsconfig.electron.json --watch\" \"node scripts/watch-preload.cjs\"",
+    "start": "npm run electron:compile && concurrently -k \"vite\" \"npm run electron:watch\" \"wait-on http://localhost:5173 dist-electron/main.js && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .\"",
+    "lint": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.electron.json --noEmit",
+    "icon": "node scripts/make-icon.cjs",
+    "dist": "npm run build && npm run electron:compile && electron-builder --win",
+    "dist:portable": "npm run build && npm run electron:compile && electron-builder --win portable",
+    "dist:dir": "npm run build && npm run electron:compile && electron-builder --win dir"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.546.0",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "tailwind-merge": "^3.6.0",
+    "windows-media-sessions": "^1.0.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.14",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^5.0.4",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "35.4.0",
+    "electron-builder": "^26.15.3",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.35.2",
+    "tailwindcss": "^4.1.14",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.3",
+    "wait-on": "^8.0.3"
+  },
+  "build": {
+    "appId": "io.github.qq-desktop-lyrics",
+    "productName": "QQ Desktop Lyrics",
+    "copyright": "Copyright © 2026",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/node_modules/windows-media-sessions/**"
+    ],
+    "extraResources": [
+      {
+        "from": "scripts/smtc-control.ps1",
+        "to": "scripts/smtc-control.ps1"
+      },
+      {
+        "from": "build/icon.png",
+        "to": "icon.png"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        },
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-Portable.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-${version}-Setup.${ext}"
+    }
+  }
+}
